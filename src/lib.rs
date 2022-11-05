@@ -130,6 +130,7 @@ fn build_function(variants: &[&Variant], func: DeriveFunc) -> Result<proc_macro2
         {
             match #match_on
             {
+                #[allow(unused_variables)]
                 #(#arms)*
             }
         }
@@ -169,7 +170,7 @@ fn build_fwd_assoc(assocs: impl Iterator<Item = Result<Association>>, variant: &
             let named = fields.named.iter().map(|f| 
             {
                 let ident = &f.ident;
-                quote!(#ident: _)
+                quote!(#ident)
             }).collect::<Vec::<proc_macro2::TokenStream>>();
             quote!({#(#named),*})
         },

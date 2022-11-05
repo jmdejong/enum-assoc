@@ -104,6 +104,20 @@ pub enum TestEnumWithDefault
     UsingDefault,
 }
 
+#[derive(Assoc)]
+#[func(fn name(&self) -> String)]
+pub enum Color<'a>
+{
+	#[assoc(name = "black".to_string())]
+	Black,
+	#[assoc(name = "white".to_string())]
+	White,
+	#[assoc(name = name.to_string())]
+	Named{name: &'a str},
+	#[assoc(name = format!("rgb({}, {}, {})", red, green, blue))]
+	RGB{red: f32, green: f32, blue: f32},
+}
+
 #[test]
 fn test_fwd()
 {
@@ -154,3 +168,13 @@ fn test_default()
     assert_eq!(TestEnumWithDefault::ValueSet.foo(), 1);
     assert_eq!(TestEnumWithDefault::UsingDefault.foo(), 0);
 }
+
+
+#[test]
+fn test_variant_fields()
+{
+    assert_eq!(Color::Black.name(), "black");
+    assert_eq!(Color::Named{name: "yellow"}.name(), "yellow");
+    assert_eq!(Color::RGB{red: 0.5, green: 1.0, blue: 0.25}.name(), "rgb(0.5, 1, 0.25)");
+}
+
